@@ -33,7 +33,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
     // ignore: close_sinks
     final bloc = BlocProvider.of<MusicLookupBloc>(context);
     // Tracks need to be loaded only once
-    bloc.add(FetchTracks(albumId: widget.album.id));
+    //bloc.add(LookupTracks(albumId: widget.album.id));
   }
 
   @override

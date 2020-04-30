@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
+import 'package:flutter_advanced_ui/shared/model/artist.dart';
 import 'package:flutter_advanced_ui/shared/model/track.dart';
 
 abstract class MusicDataState {
@@ -24,6 +25,14 @@ class AlbumsLoaded extends MusicDataState {
   const AlbumsLoaded({
     @required this.albums,
   }) : assert(albums != null);
+}
+
+class ArtistsLoaded extends MusicDataState {
+  final List<Artist> artists;
+
+  const ArtistsLoaded({
+    @required this.artists,
+  }) : assert(artists != null);
 }
 
 class TracksLoaded extends MusicDataState {

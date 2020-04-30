@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
+import 'package:flutter_advanced_ui/shared/model/artist.dart';
 import 'package:flutter_advanced_ui/shared/model/track.dart';
-import 'package:http/http.dart' as http;
 
 class MusicDataProvider {
   static const searchBaseUrl = 'https://itunes.apple.com/search';
@@ -16,36 +18,51 @@ class MusicDataProvider {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<List<Album>> fetchAlbums(String term) async {
-    final queryParams = 'term=${term.toLowerCase()}&entity=album';
+  Future<List<Artist>> fetchArtists(String term) async {
+    final queryParams =
+        'term=${term.toLowerCase()}&entity=musicArtist&attribute=artistTerm';
     final url = '$searchBaseUrl?$queryParams';
-    final response = await http.get(url);
+    final payload = await _get(url);
 
-    if (response.statusCode == HttpStatus.ok) {
-      final payload = await json.decode(response.body);
-      final albums = List.generate(payload['resultCount'], (index) {
-        return Album.fromJson(payload['results'][index]);
-      });
+    final artists = List.generate(payload['resultCount'], (index) {
+      return Artist.fromJson(payload['results'][index]);
+    });
 
-      return albums;
-    } else {
-      throw Exception('Oops, something went wrong');
-    }
+    return artists;
   }
 
-  Future<List<Track>> fetchTracks(String albumId) async {
+  Future<List<Album>> fetchAlbumsByArtist(String artistId) async {
+    final queryParams = 'id=$artistId&entity=album';
+    final url = '$lookupBaseUrl?$queryParams';
+    final payload = await _get(url);
+
+    final albums = (payload['results'] as List)
+        .where((result) => result['wrapperType'] == 'collection')
+        .map((result) => Album.fromJson(result))
+        .toList();
+
+    return albums;
+  }
+
+  Future<List<Track>> fetchTracksByAlbum(String albumId) async {
     final queryParams = 'id=$albumId&entity=song';
     final url = '$lookupBaseUrl?$queryParams';
+    final payload = await _get(url);
+
+    final tracks = (payload['results'] as List)
+        .where((result) => result['wrapperType'] == 'track')
+        .map((result) => Track.fromJson(result))
+        .toList();
+
+    return tracks;
+  }
+
+  dynamic _get(String url) async {
+    debugPrint('Http get: $url');
     final response = await http.get(url);
 
     if (response.statusCode == HttpStatus.ok) {
-      final payload = await json.decode(response.body);
-      final tracks = (payload['results'] as List)
-          .where((result) => result['wrapperType'] == 'track')
-          .map((result) => Track.fromJson(result))
-          .toList();
-
-      return tracks;
+      return await json.decode(response.body);
     } else {
       throw Exception('Oops, something went wrong');
     }

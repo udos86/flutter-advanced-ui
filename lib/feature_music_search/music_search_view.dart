@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_ui/shared/bloc/music_lookup_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_advanced_ui/feature_album_lookup/album_detail_page.dart';
 import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
 import 'package:flutter_advanced_ui/i18n/translations.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_data_events.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_search_bloc.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -49,6 +49,7 @@ class _MusicSearchViewState extends State<MusicSearchView> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        /*
         if (widget.layout == SearchViewLayout.GridView ||
             widget.layout == SearchViewLayout.ListView) ...[
           _buildSearchInput(context),
@@ -56,8 +57,11 @@ class _MusicSearchViewState extends State<MusicSearchView> {
             height: 1.0,
           ),
         ],
-        BlocBuilder<MusicSearchBloc, MusicDataState>(
+         */
+        BlocBuilder<MusicLookupBloc, MusicDataState>(
+          // condition: (_, state) => !(state is TracksLoaded),
           builder: (context, state) {
+            debugPrint(state.toString());
             if (state is AlbumsLoaded) {
               switch (widget.layout) {
                 case SearchViewLayout.GridView:
@@ -89,7 +93,7 @@ class _MusicSearchViewState extends State<MusicSearchView> {
 
   Widget _buildSearchInput(BuildContext context) {
     // ignore: close_sinks
-    final bloc = BlocProvider.of<MusicSearchBloc>(context);
+    final bloc = BlocProvider.of<MusicLookupBloc>(context);
     return TextFormField(
       controller: _searchController,
       decoration: InputDecoration(
@@ -110,7 +114,7 @@ class _MusicSearchViewState extends State<MusicSearchView> {
       ),
       onChanged: (value) {
         if (value.isNotEmpty) {
-          bloc.add(SearchAlbums(term: value));
+          bloc.add(LookupAlbums(artistId: value));
         }
       },
     );
@@ -207,6 +211,7 @@ class _MusicSearchViewState extends State<MusicSearchView> {
     return Expanded(
       child: CustomScrollView(
         slivers: <Widget>[
+          /*
           SliverAppBar(
             flexibleSpace: Padding(
               padding: EdgeInsets.only(top: 8.0),
@@ -221,6 +226,7 @@ class _MusicSearchViewState extends State<MusicSearchView> {
               height: 1.0,
             ),
           ),
+           */
           if (widget.layout == SearchViewLayout.SliverGridView)
             SliverGrid.count(
               crossAxisCount: 2,

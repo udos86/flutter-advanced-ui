@@ -18,7 +18,10 @@ class MusicLookupBloc extends Bloc<MusicDataEvent, MusicDataState> {
   Stream<MusicDataState> mapEventToState(MusicDataEvent event) async* {
     yield DataLoading();
     try {
-      if (event is FetchTracks) {
+      if (event is LookupAlbums) {
+        final albums = await repository.getAlbums(event.artistId);
+        yield AlbumsLoaded(albums: albums);
+      } else if (event is LookupTracks) {
         final tracks = await repository.getTracks(event.albumId);
         yield TracksLoaded(tracks: tracks);
       }

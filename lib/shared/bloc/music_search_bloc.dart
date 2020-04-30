@@ -18,9 +18,9 @@ class MusicSearchBloc extends Bloc<MusicDataEvent, MusicDataState> {
   Stream<MusicDataState> mapEventToState(MusicDataEvent event) async* {
     yield DataLoading();
     try {
-      if (event is SearchAlbums) {
-        final albums = await repository.getAlbums(event.term);
-        yield AlbumsLoaded(albums: albums);
+      if (event is SearchArtists) {
+        final artists = await repository.getArtists(event.term);
+        yield ArtistsLoaded(artists: artists);
       }
     } catch (_error) {
       yield DataError();
