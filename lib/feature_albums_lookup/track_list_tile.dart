@@ -43,9 +43,34 @@ class _TrackListTileState extends State<TrackListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: IconButton(
-        icon: Icon(_getIconDataByAudioPlayerState()),
-        onPressed: () => onAudioPreviewButtonPressed(widget.track.previewUrl),
+      leading: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          StreamBuilder<Duration>(
+            stream: _audioPlayer.onDurationChanged,
+            builder: (context, snapshot) {
+              final duration = snapshot.data?.inSeconds;
+              return StreamBuilder<Duration>(
+                stream: _audioPlayer.onAudioPositionChanged,
+                builder: (context, snapshot) {
+                  final position = snapshot.data?.inSeconds;
+                  return CircularProgressIndicator(
+                    backgroundColor: Colors.black26,
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black87),
+                    value: _getProgressValue(position, duration),
+                  );
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(_getIconDataByAudioPlayerState()),
+            onPressed: () {
+              onAudioPreviewButtonPressed(widget.track.previewUrl);
+            },
+          ),
+        ],
       ),
       title: Text(widget.track.title),
       trailing: Column(
@@ -57,10 +82,21 @@ class _TrackListTileState extends State<TrackListTile> {
     );
   }
 
+  double _getProgressValue(int position, int duration) {
+    if (position != null && duration != null) {
+      final progress = position / duration.toDouble();
+      if (progress < 1.0) {
+        return progress;
+      }
+    }
+
+    return 0.0;
+  }
+
   IconData _getIconDataByAudioPlayerState() {
     return audioPlayerState == AudioPlayerState.PLAYING
-        ? Icons.pause_circle_outline
-        : Icons.play_circle_outline;
+        ? Icons.pause
+        : Icons.play_arrow;
   }
 
   void onAudioPreviewButtonPressed(String previewUrl) async {

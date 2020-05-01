@@ -7,6 +7,8 @@ class MusicDataCache {
 
   void remove(String key) => _cache.remove(key);
 
+  void clear() => _cache.clear();
+
   bool contains(String key) => _cache.containsKey(key);
 
   int size() => _cache.length;
