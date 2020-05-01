@@ -134,7 +134,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                     )
                   : SliverFillRemaining(
                       child: NoDataPlaceholder(
-                        state: state,
+                        isLoading: state is DataLoading,
                       ),
                     );
             },

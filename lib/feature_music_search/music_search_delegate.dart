@@ -33,38 +33,42 @@ class MusicSearchDelegate extends SearchDelegate<Artist> {
   Widget buildResults(BuildContext context) {
     // ignore: close_sinks
     final bloc = BlocProvider.of<MusicArtistsSearchBloc>(context);
-    bloc.add(SearchArtists(term: query));
 
-    return BlocBuilder<MusicArtistsSearchBloc, MusicDataState>(
-      bloc: bloc,
-      builder: (context, state) {
-        if (state is ArtistsLoaded) {
-          final artists = state.artists;
-          return ListView.builder(
-            itemCount: artists.length,
-            itemBuilder: (context, index) {
-              final artist = artists[index];
-              return ListTile(
-                title: Text(artist.name),
-                onTap: () {
-                  close(context, artist);
-                },
-              );
-            },
-          );
-        } else {
-          return NoDataPlaceholder(
-            state: state,
-          );
-        }
-      },
-    );
+    if (query.isNotEmpty) {
+      bloc.add(SearchArtists(term: query));
+
+      return BlocBuilder<MusicArtistsSearchBloc, MusicDataState>(
+        bloc: bloc,
+        builder: (context, state) {
+          if (state is ArtistsLoaded) {
+            final artists = state.artists;
+            return ListView.builder(
+              itemCount: artists.length,
+              itemBuilder: (context, index) {
+                final artist = artists[index];
+                return ListTile(
+                  title: Text(artist.name),
+                  onTap: () {
+                    close(context, artist);
+                  },
+                );
+              },
+            );
+          } else {
+            return NoDataPlaceholder(
+              isLoading: state is DataLoading,
+            );
+          }
+        },
+      );
+    } else {
+      return NoDataPlaceholder();
+    }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return Column();
+    return NoDataPlaceholder();
   }
 
   @override

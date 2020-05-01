@@ -78,7 +78,7 @@ class _AlbumsViewState extends State<AlbumsView> {
             } else {
               return Expanded(
                 child: NoDataPlaceholder(
-                  state: state,
+                  isLoading: state is DataLoading,
                 ),
               );
             }

@@ -37,7 +37,7 @@ class MusicTracksLookupBloc extends Bloc<LookupTracks, MusicDataState> {
     yield DataLoading();
     try {
       if (event is LookupTracks) {
-        final tracks = await repository.getTracks(event.albumId);
+        final tracks = await repository.getTracksByAlbum(event.albumId);
         yield TracksLoaded(tracks: tracks);
       }
     } catch (_error) {

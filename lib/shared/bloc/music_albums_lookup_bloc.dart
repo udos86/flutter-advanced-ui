@@ -37,7 +37,7 @@ class MusicAlbumsLookupBloc extends Bloc<LookupAlbums, MusicDataState> {
     yield DataLoading();
     try {
       if (event is LookupAlbums) {
-        final albums = await repository.getAlbums(event.artistId);
+        final albums = await repository.getAlbumsByArtist(event.artistId);
         yield AlbumsLoaded(albums: albums);
       }
     } catch (_error) {
