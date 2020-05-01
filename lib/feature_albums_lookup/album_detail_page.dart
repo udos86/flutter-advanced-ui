@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_ui/shared/widget/no_data_placeholder_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
-import 'package:flutter_advanced_ui/i18n/translations.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_data_events.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_lookup_bloc.dart';
+import 'package:flutter_advanced_ui/shared/bloc/music_tracks_lookup_bloc.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -31,9 +30,9 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
     _scrollController = ScrollController();
 
     // ignore: close_sinks
-    final bloc = BlocProvider.of<MusicLookupBloc>(context);
-    // Tracks need to be loaded only once
-    //bloc.add(LookupTracks(albumId: widget.album.id));
+    final bloc = BlocProvider.of<MusicTracksLookupBloc>(context);
+    // Tracks need to be obtained only once
+    bloc.add(LookupTracks(albumId: widget.album.id));
   }
 
   @override
@@ -113,7 +112,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
               height: 1.0,
             ),
           ),
-          BlocBuilder<MusicLookupBloc, MusicDataState>(
+          BlocBuilder<MusicTracksLookupBloc, MusicDataState>(
             builder: (context, state) {
               return state is TracksLoaded
                   ? SliverPadding(
@@ -134,10 +133,8 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                       ),
                     )
                   : SliverFillRemaining(
-                      child: Center(
-                        child: state is DataLoading
-                            ? CircularProgressIndicator()
-                            : Text(l10n.translate(Translation.textEmptyView)),
+                      child: NoDataPlaceholder(
+                        state: state,
                       ),
                     );
             },

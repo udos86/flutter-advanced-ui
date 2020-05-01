@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_data_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 
+import 'feature_albums_lookup/albums_view.dart';
 import 'feature_music_search/music_search_delegate.dart';
-import 'feature_music_search/music_search_view.dart';
 import 'i18n/app-localizations.dart';
-import 'shared/bloc/music_lookup_bloc.dart';
-import 'shared/bloc/music_search_bloc.dart';
+import 'shared/bloc/music_albums_lookup_bloc.dart';
+import 'shared/bloc/music_artists_search_bloc.dart';
+import 'shared/bloc/music_tracks_lookup_bloc.dart';
 import 'shared/data/music_data_provider.dart';
 import 'shared/data/music_data_repository.dart';
 import 'shared/model/artist.dart';
@@ -36,11 +36,14 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MusicSearchBloc>(
-          create: (context) => MusicSearchBloc(repository: repository),
+        BlocProvider<MusicArtistsSearchBloc>(
+          create: (context) => MusicArtistsSearchBloc(repository: repository),
         ),
-        BlocProvider<MusicLookupBloc>(
-          create: (context) => MusicLookupBloc(repository: repository),
+        BlocProvider<MusicAlbumsLookupBloc>(
+          create: (context) => MusicAlbumsLookupBloc(repository: repository),
+        ),
+        BlocProvider<MusicTracksLookupBloc>(
+          create: (context) => MusicTracksLookupBloc(repository: repository),
         ),
       ],
       child: MaterialApp(
@@ -75,8 +78,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: MusicSearchView(
-        layout: SearchViewLayout.SliverGridView,
+      body: AlbumsView(
+        layout: AlbumsViewLayout.SliverGridView,
       ),
     );
   }
@@ -100,8 +103,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onSearchValue(Artist artist) {
-    // ignore: close_sinks
-    final bloc = BlocProvider.of<MusicLookupBloc>(context);
-    bloc.add(LookupAlbums(artistId: artist.id));
+    if (artist != null) {
+      // ignore: close_sinks
+      final bloc = BlocProvider.of<MusicAlbumsLookupBloc>(context);
+      bloc.add(LookupAlbums(artistId: artist.id));
+    }
   }
 }

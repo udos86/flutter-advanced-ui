@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_lookup_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_advanced_ui/feature_album_lookup/album_detail_page.dart';
-import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
-import 'package:flutter_advanced_ui/i18n/translations.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_data_events.dart';
-import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
-import 'package:flutter_advanced_ui/shared/model/album.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-enum SearchViewLayout {
+import 'package:flutter_advanced_ui/shared/bloc/music_albums_lookup_bloc.dart';
+import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
+import 'package:flutter_advanced_ui/i18n/translations.dart';
+import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
+import 'package:flutter_advanced_ui/shared/model/album.dart';
+import 'package:flutter_advanced_ui/shared/widget/no_data_placeholder_widget.dart';
+
+import 'album_detail_page.dart';
+
+enum AlbumsViewLayout {
   GridView,
   ListView,
   SliverGridView,
   SliverListView,
 }
 
-class MusicSearchView extends StatefulWidget {
-  MusicSearchView({
+class AlbumsView extends StatefulWidget {
+  AlbumsView({
     Key key,
-    this.layout = SearchViewLayout.ListView,
+    this.layout = AlbumsViewLayout.ListView,
   }) : super(key: key);
 
-  final SearchViewLayout layout;
+  final AlbumsViewLayout layout;
 
   @override
-  _MusicSearchViewState createState() => _MusicSearchViewState();
+  _AlbumsViewState createState() => _AlbumsViewState();
 }
 
-class _MusicSearchViewState extends State<MusicSearchView> {
+class _AlbumsViewState extends State<AlbumsView> {
   TextEditingController _searchController;
 
   @override
@@ -58,75 +60,31 @@ class _MusicSearchViewState extends State<MusicSearchView> {
           ),
         ],
          */
-        BlocBuilder<MusicLookupBloc, MusicDataState>(
-          // condition: (_, state) => !(state is TracksLoaded),
+        BlocBuilder<MusicAlbumsLookupBloc, MusicDataState>(
           builder: (context, state) {
-            debugPrint(state.toString());
             if (state is AlbumsLoaded) {
               switch (widget.layout) {
-                case SearchViewLayout.GridView:
+                case AlbumsViewLayout.GridView:
                   return _buildGridView(context, state.albums);
-                case SearchViewLayout.ListView:
+                case AlbumsViewLayout.ListView:
                   return _buildListView(context, state.albums);
-                case SearchViewLayout.SliverListView:
+                case AlbumsViewLayout.SliverListView:
                   return _buildSliverScrollView(context, state.albums);
-                case SearchViewLayout.SliverGridView:
+                case AlbumsViewLayout.SliverGridView:
                   return _buildSliverScrollView(context, state.albums);
                 default:
                   return _buildListView(context, state.albums);
               }
             } else {
-              switch (widget.layout) {
-                case SearchViewLayout.SliverListView:
-                  return _buildSliverScrollView(context, []);
-                case SearchViewLayout.SliverGridView:
-                  return _buildSliverScrollView(context, []);
-                default:
-                  return _buildNoDataPlaceholder(context, state);
-              }
+              return Expanded(
+                child: NoDataPlaceholder(
+                  state: state,
+                ),
+              );
             }
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildSearchInput(BuildContext context) {
-    // ignore: close_sinks
-    final bloc = BlocProvider.of<MusicLookupBloc>(context);
-    return TextFormField(
-      controller: _searchController,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        labelText: l10n.translate(Translation.labelSearch),
-        contentPadding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 16.0),
-        prefixIcon: Icon(Icons.search),
-        hasFloatingPlaceholder: false,
-        suffixIcon: GestureDetector(
-          onTap: () {
-            // Workaround see #17647
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _searchController.clear();
-            });
-          },
-          child: Icon(Icons.clear),
-        ),
-      ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          bloc.add(LookupAlbums(artistId: value));
-        }
-      },
-    );
-  }
-
-  Widget _buildNoDataPlaceholder(BuildContext context, MusicDataState state) {
-    return Expanded(
-      child: Center(
-        child: state is DataLoading
-            ? CircularProgressIndicator()
-            : Text(l10n.translate(Translation.textEmptyView)),
-      ),
     );
   }
 
@@ -227,14 +185,14 @@ class _MusicSearchViewState extends State<MusicSearchView> {
             ),
           ),
            */
-          if (widget.layout == SearchViewLayout.SliverGridView)
+          if (widget.layout == AlbumsViewLayout.SliverGridView)
             SliverGrid.count(
               crossAxisCount: 2,
               children: <Widget>[
                 for (final album in albums) _buildGridItem(context, album),
               ],
             ),
-          if (widget.layout == SearchViewLayout.SliverListView)
+          if (widget.layout == AlbumsViewLayout.SliverListView)
             SliverPadding(
               padding: EdgeInsets.all(8.0),
               sliver: SliverList(
@@ -257,6 +215,35 @@ class _MusicSearchViewState extends State<MusicSearchView> {
       MaterialPageRoute(
         builder: (context) => AlbumDetailPage(album: album),
       ),
+    );
+  }
+
+  Widget _buildSearchInput(BuildContext context) {
+    // ignore: close_sinks
+    final bloc = BlocProvider.of<MusicAlbumsLookupBloc>(context);
+    return TextFormField(
+      controller: _searchController,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        labelText: l10n.translate(Translation.labelSearch),
+        contentPadding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 16.0),
+        prefixIcon: Icon(Icons.search),
+        hasFloatingPlaceholder: false,
+        suffixIcon: GestureDetector(
+          onTap: () {
+            // Workaround see #17647
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _searchController.clear();
+            });
+          },
+          child: Icon(Icons.clear),
+        ),
+      ),
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          bloc.add(LookupAlbums(artistId: value));
+        }
+      },
     );
   }
 }

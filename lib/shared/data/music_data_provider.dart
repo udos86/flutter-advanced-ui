@@ -18,9 +18,9 @@ class MusicDataProvider {
     @required this.httpClient,
   }) : assert(httpClient != null);
 
-  Future<List<Artist>> fetchArtists(String term) async {
-    final queryParams =
-        'term=${term.toLowerCase()}&entity=musicArtist&attribute=artistTerm';
+  Future<List<Artist>> fetchArtists(String artistTerm) async {
+    final term = artistTerm.toLowerCase().replaceAll(' ', '+');
+    final queryParams = 'term=$term&entity=musicArtist&attribute=artistTerm';
     final url = '$searchBaseUrl?$queryParams';
     final payload = await _get(url);
 
@@ -64,7 +64,7 @@ class MusicDataProvider {
     if (response.statusCode == HttpStatus.ok) {
       return await json.decode(response.body);
     } else {
-      throw Exception('Oops, something went wrong');
+      throw Exception('Could not get $url');
     }
   }
 }
