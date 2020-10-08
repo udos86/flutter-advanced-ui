@@ -77,15 +77,15 @@ class MusicSearchDelegate extends SearchDelegate<Artist> {
     return theme.copyWith(
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(
-          color: theme.primaryTextTheme.title.color,
+          color: theme.primaryTextTheme.headline6.color,
         ),
       ),
       primaryColor: Colors.black,
       primaryIconTheme: theme.primaryIconTheme,
       primaryColorBrightness: theme.primaryColorBrightness,
       textTheme: theme.textTheme.copyWith(
-        title: theme.textTheme.title.copyWith(
-          color: theme.primaryTextTheme.title.color,
+        headline6: theme.textTheme.headline6.copyWith(
+          color: theme.primaryTextTheme.headline6.color,
         ),
       ),
     );

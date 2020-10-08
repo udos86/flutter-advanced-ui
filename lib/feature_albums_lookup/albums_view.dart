@@ -228,7 +228,7 @@ class _AlbumsViewState extends State<AlbumsView> {
         labelText: l10n.translate(Translation.labelSearch),
         contentPadding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 16.0),
         prefixIcon: Icon(Icons.search),
-        hasFloatingPlaceholder: false,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
         suffixIcon: GestureDetector(
           onTap: () {
             // Workaround see #17647

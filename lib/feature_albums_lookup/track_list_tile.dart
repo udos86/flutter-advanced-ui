@@ -57,7 +57,7 @@ class _TrackListTileState extends State<TrackListTile> {
                   return CircularProgressIndicator(
                     backgroundColor: Colors.black26,
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black87),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
                     value: _getProgressValue(position, duration),
                   );
                 },
