@@ -6,12 +6,12 @@ import 'package:flutter_advanced_ui/shared/bloc/music_artists_search_bloc.dart';
 import 'package:flutter_advanced_ui/shared/model/artist.dart';
 import 'package:flutter_advanced_ui/shared/widget/no_data_placeholder_widget.dart';
 
-class MusicSearchDelegate extends SearchDelegate<Artist> {
+class MusicSearchDelegate extends SearchDelegate<Artist?> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -22,7 +22,7 @@ class MusicSearchDelegate extends SearchDelegate<Artist> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -62,13 +62,13 @@ class MusicSearchDelegate extends SearchDelegate<Artist> {
         },
       );
     } else {
-      return NoDataPlaceholder();
+      return const NoDataPlaceholder();
     }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return NoDataPlaceholder();
+    return const NoDataPlaceholder();
   }
 
   @override
@@ -77,15 +77,15 @@ class MusicSearchDelegate extends SearchDelegate<Artist> {
     return theme.copyWith(
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(
-          color: theme.primaryTextTheme.headline6.color,
+          color: theme.primaryTextTheme.headline6?.color,
         ),
       ),
       primaryColor: Colors.black,
       primaryIconTheme: theme.primaryIconTheme,
       primaryColorBrightness: theme.primaryColorBrightness,
       textTheme: theme.textTheme.copyWith(
-        headline6: theme.textTheme.headline6.copyWith(
-          color: theme.primaryTextTheme.headline6.color,
+        headline6: theme.textTheme.headline6?.copyWith(
+          color: theme.primaryTextTheme.headline6?.color,
         ),
       ),
     );

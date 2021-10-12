@@ -3,7 +3,7 @@ enum Translation {
   textEmptyView,
 }
 
-const AppTranslations = {
+const appTranslations = {
   'de': {
     Translation.labelSearch: 'Suche',
     Translation.textEmptyView: 'Keine Daten vorhanden'

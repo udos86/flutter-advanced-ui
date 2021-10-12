@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:flutter_advanced_ui/shared/data/music_data_repository.dart';
@@ -10,27 +9,24 @@ class LookupAlbums {
   final String artistId;
 
   const LookupAlbums({
-    @required this.artistId,
-  }) : assert(artistId != null);
+    required this.artistId,
+  });
 }
 
 class AlbumsLoaded extends MusicDataState {
   final List<Album> albums;
 
   const AlbumsLoaded({
-    @required this.albums,
-  }) : assert(albums != null);
+    required this.albums,
+  });
 }
 
 class MusicAlbumsLookupBloc extends Bloc<LookupAlbums, MusicDataState> {
   final MusicDataRepository repository;
 
   MusicAlbumsLookupBloc({
-    @required this.repository,
-  }) : assert(repository != null);
-
-  @override
-  MusicDataState get initialState => DataEmpty();
+    required this.repository,
+  }) : super(DataEmpty());
 
   @override
   Stream<MusicDataState> mapEventToState(LookupAlbums event) async* {
@@ -41,7 +37,7 @@ class MusicAlbumsLookupBloc extends Bloc<LookupAlbums, MusicDataState> {
         yield AlbumsLoaded(albums: albums);
       }
     } catch (_error) {
-      yield DataError();
+      yield const DataError('Error');
     }
   }
 }

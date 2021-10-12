@@ -7,12 +7,12 @@ class Track {
   final String title;
 
   Track({
-    this.id,
-    this.length,
-    this.number,
-    this.previewUrl,
-    this.release,
-    this.title,
+    required this.id,
+    required this.length,
+    required this.number,
+    required this.previewUrl,
+    required this.release,
+    required this.title,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) {

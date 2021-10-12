@@ -15,8 +15,8 @@ class MusicDataProvider {
   final http.Client httpClient;
 
   MusicDataProvider({
-    @required this.httpClient,
-  }) : assert(httpClient != null);
+    required this.httpClient,
+  });
 
   Future<List<Artist>> fetchArtists(String artistTerm) async {
     final term = artistTerm.toLowerCase().replaceAll(' ', '+');
@@ -59,7 +59,7 @@ class MusicDataProvider {
 
   dynamic _get(String url) async {
     debugPrint('Http get: $url');
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == HttpStatus.ok) {
       return await json.decode(response.body);

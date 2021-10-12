@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:flutter_advanced_ui/shared/bloc/music_albums_lookup_bloc.dart';
-import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
+import 'package:flutter_advanced_ui/i18n/app_localizations.dart';
 import 'package:flutter_advanced_ui/i18n/translations.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
@@ -12,16 +12,16 @@ import 'package:flutter_advanced_ui/shared/widget/no_data_placeholder_widget.dar
 import 'album_detail_page.dart';
 
 enum AlbumsViewLayout {
-  GridView,
-  ListView,
-  SliverGridView,
-  SliverListView,
+  gridView,
+  listView,
+  sliverGridView,
+  sliverListView,
 }
 
 class AlbumsView extends StatefulWidget {
-  AlbumsView({
-    Key key,
-    this.layout = AlbumsViewLayout.ListView,
+  const AlbumsView({
+    Key? key,
+    this.layout = AlbumsViewLayout.listView,
   }) : super(key: key);
 
   final AlbumsViewLayout layout;
@@ -31,7 +31,7 @@ class AlbumsView extends StatefulWidget {
 }
 
 class _AlbumsViewState extends State<AlbumsView> {
-  TextEditingController _searchController;
+  late TextEditingController _searchController;
 
   @override
   void initState() {
@@ -64,13 +64,13 @@ class _AlbumsViewState extends State<AlbumsView> {
           builder: (context, state) {
             if (state is AlbumsLoaded) {
               switch (widget.layout) {
-                case AlbumsViewLayout.GridView:
+                case AlbumsViewLayout.gridView:
                   return _buildGridView(context, state.albums);
-                case AlbumsViewLayout.ListView:
+                case AlbumsViewLayout.listView:
                   return _buildListView(context, state.albums);
-                case AlbumsViewLayout.SliverListView:
+                case AlbumsViewLayout.sliverListView:
                   return _buildSliverScrollView(context, state.albums);
-                case AlbumsViewLayout.SliverGridView:
+                case AlbumsViewLayout.sliverGridView:
                   return _buildSliverScrollView(context, state.albums);
                 default:
                   return _buildListView(context, state.albums);
@@ -91,7 +91,7 @@ class _AlbumsViewState extends State<AlbumsView> {
   Widget _buildListView(BuildContext context, List<Album> albums) {
     return Expanded(
       child: ListView.builder(
-        padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
         itemCount: albums.length,
         itemBuilder: (context, index) {
           return _buildListItem(context, albums[index]);
@@ -112,7 +112,7 @@ class _AlbumsViewState extends State<AlbumsView> {
                 placeholder: kTransparentImage,
                 width: 56.0, // fixed width to avoid text moving on load
                 image: album.artworkUrl,
-                fadeInDuration: Duration(milliseconds: 300),
+                fadeInDuration: const Duration(milliseconds: 300),
               ),
             ),
             title: Text(album.title),
@@ -148,7 +148,7 @@ class _AlbumsViewState extends State<AlbumsView> {
             alignment: Alignment.center,
             placeholder: kTransparentImage,
             image: album.artworkUrl,
-            fadeInDuration: Duration(milliseconds: 300),
+            fadeInDuration: const Duration(milliseconds: 300),
           ),
         ),
       ),
@@ -157,7 +157,7 @@ class _AlbumsViewState extends State<AlbumsView> {
         title: Text(
           album.title,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -185,16 +185,16 @@ class _AlbumsViewState extends State<AlbumsView> {
             ),
           ),
            */
-          if (widget.layout == AlbumsViewLayout.SliverGridView)
+          if (widget.layout == AlbumsViewLayout.sliverGridView)
             SliverGrid.count(
               crossAxisCount: 2,
               children: <Widget>[
                 for (final album in albums) _buildGridItem(context, album),
               ],
             ),
-          if (widget.layout == AlbumsViewLayout.SliverListView)
+          if (widget.layout == AlbumsViewLayout.sliverListView)
             SliverPadding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
@@ -226,17 +226,17 @@ class _AlbumsViewState extends State<AlbumsView> {
       decoration: InputDecoration(
         border: InputBorder.none,
         labelText: l10n.translate(Translation.labelSearch),
-        contentPadding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 16.0),
-        prefixIcon: Icon(Icons.search),
+        contentPadding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 16.0),
+        prefixIcon: const Icon(Icons.search),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         suffixIcon: GestureDetector(
           onTap: () {
             // Workaround see #17647
-            WidgetsBinding.instance.addPostFrameCallback((_) {
+            WidgetsBinding.instance?.addPostFrameCallback((_) {
               _searchController.clear();
             });
           },
-          child: Icon(Icons.clear),
+          child: const Icon(Icons.clear),
         ),
       ),
       onChanged: (value) {

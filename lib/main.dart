@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'feature_albums_lookup/albums_view.dart';
 import 'feature_music_search/music_search_delegate.dart';
-import 'i18n/app-localizations.dart';
+import 'i18n/app_localizations.dart';
 import 'shared/bloc/music_albums_lookup_bloc.dart';
 import 'shared/bloc/music_artists_search_bloc.dart';
 import 'shared/bloc/music_tracks_lookup_bloc.dart';
@@ -26,11 +26,10 @@ void main() {
 class App extends StatelessWidget {
   final MusicDataRepository repository;
 
-  App({
-    Key key,
-    @required this.repository,
-  })  : assert(repository != null),
-        super(key: key);
+  const App({
+    Key? key,
+    required this.repository,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: [
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -59,14 +58,17 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.teal,
         ),
-        home: HomePage(title: 'Flutter Advanced UI'),
+        home: const HomePage(title: 'Flutter Advanced UI'),
       ),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  const HomePage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
   final String title;
 
@@ -79,8 +81,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: AlbumsView(
-        layout: AlbumsViewLayout.SliverGridView,
+      body: const AlbumsView(
+        layout: AlbumsViewLayout.sliverGridView,
       ),
     );
   }
@@ -91,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black,
       actions: [
         IconButton(
-          icon: Icon(Icons.search),
+          icon: const Icon(Icons.search),
           onPressed: () {
             showSearch(
               context: context,
@@ -103,7 +105,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void onSearchValue(Artist artist) {
+  void onSearchValue(Artist? artist) {
     if (artist != null) {
       // ignore: close_sinks
       final bloc = BlocProvider.of<MusicAlbumsLookupBloc>(context);

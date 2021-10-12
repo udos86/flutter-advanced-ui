@@ -1,7 +1,7 @@
 class MusicDataCache {
   final _cache = <String, List<dynamic>>{};
 
-  List<T> get<T>(String key) => contains(key) ? _cache[key] as List<T> : null;
+  List<T>? get<T>(String key) => contains(key) ? _cache[key] as List<T> : null;
 
   void set(String key, List<dynamic> data) => _cache[key] = data;
 

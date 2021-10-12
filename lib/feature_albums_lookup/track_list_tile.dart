@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_ui/shared/model/track.dart';
 
 class TrackListTile extends StatefulWidget {
-  TrackListTile(
+  const TrackListTile(
     this.track, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Track track;
@@ -17,10 +17,10 @@ class TrackListTile extends StatefulWidget {
 }
 
 class _TrackListTileState extends State<TrackListTile> {
-  AudioPlayerState audioPlayerState;
+  PlayerState? playerState;
 
-  AudioPlayer _audioPlayer;
-  StreamSubscription _subscription;
+  late AudioPlayer _audioPlayer;
+  late StreamSubscription _subscription;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _TrackListTileState extends State<TrackListTile> {
     _audioPlayer = AudioPlayer();
     _subscription = _audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
-        audioPlayerState = state;
+        playerState = state;
       });
     });
   }
@@ -57,7 +57,8 @@ class _TrackListTileState extends State<TrackListTile> {
                   return CircularProgressIndicator(
                     backgroundColor: Colors.black26,
                     strokeWidth: 2,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.black87),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black87),
                     value: _getProgressValue(position, duration),
                   );
                 },
@@ -82,7 +83,7 @@ class _TrackListTileState extends State<TrackListTile> {
     );
   }
 
-  double _getProgressValue(int position, int duration) {
+  double _getProgressValue(int? position, int? duration) {
     if (position != null && duration != null) {
       final progress = position / duration.toDouble();
       if (progress < 1.0) {
@@ -94,23 +95,21 @@ class _TrackListTileState extends State<TrackListTile> {
   }
 
   IconData _getIconDataByAudioPlayerState() {
-    return audioPlayerState == AudioPlayerState.PLAYING
-        ? Icons.pause
-        : Icons.play_arrow;
+    return playerState == PlayerState.PLAYING ? Icons.pause : Icons.play_arrow;
   }
 
   void onAudioPreviewButtonPressed(String previewUrl) async {
-    switch (audioPlayerState) {
-      case AudioPlayerState.PLAYING:
+    switch (playerState) {
+      case PlayerState.PLAYING:
         await _audioPlayer.pause();
         break;
-      case AudioPlayerState.STOPPED:
+      case PlayerState.STOPPED:
         await _audioPlayer.resume();
         break;
-      case AudioPlayerState.PAUSED:
+      case PlayerState.PAUSED:
         await _audioPlayer.resume();
         break;
-      case AudioPlayerState.COMPLETED:
+      case PlayerState.COMPLETED:
         await _audioPlayer.release();
         await _audioPlayer.play(previewUrl);
         break;

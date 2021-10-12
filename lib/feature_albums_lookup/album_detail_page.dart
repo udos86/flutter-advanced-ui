@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_ui/shared/widget/no_data_placeholder_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_advanced_ui/i18n/app-localizations.dart';
+import 'package:flutter_advanced_ui/i18n/app_localizations.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_data_states.dart';
 import 'package:flutter_advanced_ui/shared/bloc/music_tracks_lookup_bloc.dart';
 import 'package:flutter_advanced_ui/shared/model/album.dart';
@@ -12,9 +12,9 @@ import 'track_list_tile.dart';
 class AlbumDetailPage extends StatefulWidget {
   final Album album;
 
-  AlbumDetailPage({
-    Key key,
-    @required this.album,
+  const AlbumDetailPage({
+    Key? key,
+    required this.album,
   }) : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class AlbumDetailPage extends StatefulWidget {
 }
 
 class _AlbumDetailPageState extends State<AlbumDetailPage> {
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                   collapseMode: CollapseMode.parallax,
                   title: AnimatedOpacity(
                     opacity: showTitle ? 1.0 : 0,
-                    duration: Duration(milliseconds: 100),
+                    duration: const Duration(milliseconds: 100),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +82,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                               height: 40,
                               placeholder: kTransparentImage,
                               image: widget.album.artworkUrl,
-                              fadeInDuration: Duration(
+                              fadeInDuration: const Duration(
                                 milliseconds: 300,
                               ),
                             ),
@@ -98,7 +98,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                       alignment: Alignment.center,
                       placeholder: kTransparentImage,
                       image: widget.album.artworkUrl,
-                      fadeInDuration: Duration(
+                      fadeInDuration: const Duration(
                         milliseconds: 300,
                       ),
                     ),
@@ -107,7 +107,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
               },
             ),
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: Divider(
               height: 1.0,
             ),
@@ -116,7 +116,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
             builder: (context, state) {
               return state is TracksLoaded
                   ? SliverPadding(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 0.0,
                       ),
                       sliver: SliverList(
@@ -125,7 +125,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
                             return Column(
                               children: <Widget>[
                                 TrackListTile(state.tracks[index]),
-                                Divider(),
+                                const Divider(),
                               ],
                             );
                           }),

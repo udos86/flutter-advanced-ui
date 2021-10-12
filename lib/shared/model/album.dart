@@ -6,11 +6,11 @@ class Album {
   final String title;
 
   Album({
-    this.artist,
-    this.artworkUrl,
-    this.id,
-    this.release,
-    this.title,
+    required this.artist,
+    required this.artworkUrl,
+    required this.id,
+    required this.release,
+    required this.title,
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {

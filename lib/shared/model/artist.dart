@@ -3,8 +3,8 @@ class Artist {
   final String id;
 
   Artist({
-    this.name,
-    this.id,
+    required this.name,
+    required this.id,
   });
 
   factory Artist.fromJson(Map<String, dynamic> json) {

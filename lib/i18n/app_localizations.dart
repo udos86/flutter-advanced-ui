@@ -5,11 +5,11 @@ import 'translations.dart';
 @immutable
 class AppLocalizations {
   AppLocalizations(this.locale)
-      : _translations = AppTranslations[locale.languageCode];
+      : _translations = appTranslations[locale.languageCode];
 
   final Locale locale;
 
-  final Map<Translation, String> _translations;
+  final Map<Translation, String>? _translations;
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
@@ -19,9 +19,9 @@ class AppLocalizations {
     Locale('en'),
   ];
 
-  String translate(Translation key) => _translations[key];
+  String? translate(Translation key) => _translations?[key];
 
-  static AppLocalizations of(BuildContext context) {
+  static AppLocalizations? of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 }

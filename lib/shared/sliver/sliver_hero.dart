@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class SliverHero extends SliverPersistentHeader {
   final Hero child;
-  final bool floating;
-  final maxHeight;
-  final minHeight;
-  final bool pinned;
+  final double maxHeight;
+  final double minHeight;
 
   SliverHero({
-    @required this.child,
-    this.floating = false,
+    Key? key,
+    required this.child,
+    bool floating = false,
+    bool pinned = false,
     this.maxHeight = 400.0,
     this.minHeight = 0.0,
-    this.pinned = false,
   }) : super(
+          key: key,
           delegate: _SliverHeroDelegate(child, maxHeight, minHeight),
           floating: true,
           pinned: true,
@@ -22,8 +22,8 @@ class SliverHero extends SliverPersistentHeader {
 
 class _SliverHeroDelegate extends SliverPersistentHeaderDelegate {
   final Hero _hero;
-  final _maxHeight;
-  final _minHeight;
+  final double _maxHeight;
+  final double _minHeight;
 
   @override
   double get maxExtent => _maxHeight;
